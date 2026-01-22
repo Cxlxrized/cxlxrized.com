@@ -17,6 +17,7 @@ body {
     background: linear-gradient(135deg, #5a189a, #7b3fe4, #9d4edd, #c77dff);
     background-size: 400% 400%;
     animation: bgfade 20s ease infinite;
+    scroll-behavior: smooth;
 }
 
 @keyframes bgfade {
@@ -52,13 +53,24 @@ body {
     background: rgba(90,24,154,0.5);
     z-index: -1;
 }
+
+/* Neon Hero Text */
 .hero h1 {
     font-size: 3em;
     margin-bottom: 10px;
-    text-shadow: 0 0 15px rgba(0,0,0,0.5);
+    color: #ff6aff;
+    text-shadow:
+        0 0 5px #ff6aff,
+        0 0 10px #ff6aff,
+        0 0 20px #7b3fe4,
+        0 0 40px #c77dff;
+    animation: flicker 2s infinite alternate;
 }
-.hero p {
-    font-size: 1.2em;
+.hero p { font-size: 1.2em; text-shadow: 0 0 5px rgba(0,0,0,0.5); }
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.7; }
 }
 
 /* ---------------- Portfolio Grid ---------------- */
@@ -73,28 +85,61 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 20px;
     overflow: hidden;
-    transition: transform 0.3s, background 0.3s, opacity 0.5s;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s, opacity 0.5s;
     opacity: 0;
     transform: translateY(50px);
     cursor: pointer;
 }
-.portfolio-item.visible { opacity: 1; transform: translateY(0); }
+.portfolio-item.visible { 
+    opacity: 1; 
+    transform: translateY(0); 
+    box-shadow: 0 0 10px #ff6aff, 0 0 20px #7b3fe4;
+}
+.portfolio-item:hover {
+    transform: scale(1.05) rotate(-1deg);
+    background: rgba(90,24,154,0.35);
+    box-shadow: 0 0 20px #c77dff, 0 0 40px #7b3fe4;
+}
+
 .portfolio-item img {
     width: 100%;
     display:block;
     transition: transform 0.3s;
 }
 .portfolio-item:hover img { transform: scale(1.05); }
+
 .portfolio-item .info {
     padding:15px;
     text-align:center;
 }
 .portfolio-item .info h3 {
     margin:5px 0;
+    color: #ff6aff;
+    text-shadow:
+        0 0 5px #ff6aff,
+        0 0 10px #7b3fe4,
+        0 0 20px #c77dff;
 }
 .portfolio-item .info p {
     font-size:0.9em;
     color: rgba(255,255,255,0.8);
+}
+
+/* ---------------- Lightbox ---------------- */
+#lightbox {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.9);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+}
+#lightbox img {
+    max-width:90%;
+    max-height:90%;
+    border-radius:15px;
 }
 
 /* ---------------- Footer ---------------- */
@@ -112,6 +157,7 @@ body {
         <a href="about.html" onclick="closeMenu()">Über</a>
         <a href="services.html" class="active" onclick="closeMenu()">Portfolio</a>
         <a href="kontakt.html" onclick="closeMenu()">Kontakt</a>
+        <a href="team.html" onclick="closeMenu()">Team</a>
     </div>
     <div class="hamburger" onclick="toggleMenu()">☰</div>
 </div>
@@ -154,12 +200,24 @@ body {
     </div>
 </div>
 
+<!-- ---------------- Lightbox ---------------- -->
+<div id="lightbox" onclick="this.style.display='none'">
+    <img id="lightbox-img" src="" alt="">
+</div>
+
 <script>
 function toggleMenu(){document.getElementById("menu").classList.toggle("active")}
 function closeMenu(){document.getElementById("menu").classList.remove("active")}
 
 /* Scroll Animationen */
 const portfolioItems = document.querySelectorAll('.portfolio-item');
+portfolioItems.forEach(item => {
+    item.addEventListener('click', () => {
+        document.getElementById('lightbox').style.display = 'flex';
+        document.getElementById('lightbox-img').src = item.querySelector('img').src;
+    });
+});
+
 function scrollAnimation() {
     const triggerBottom = window.innerHeight / 5 * 4;
     portfolioItems.forEach(item => {
@@ -175,6 +233,7 @@ window.addEventListener('load', scrollAnimation);
     <a href="https://www.twitch.tv/cxlxrized_" target="_blank" class="social"><img src="./bilder/twitch--v2.png" width="35"></a>
     <a href="https://discord.gg/H7y5YkZu3f" target="_blank" class="social"><img src="./bilder/discord.png" width="35"></a>
     <a href="https://www.instagram.com/jonah.boro/" target="_blank" class="social"><img src="./bilder/instagram.png" width="35"></a>
+    <a href="https://open.spotify.com/playlist/4IbrjO6IOApiELkrVrwjLb?si=14f65c60c7b74c86" target="_blank" class="social"><img src="./bilder/spotify.png" width="35"></a>
 </footer>
 
 </body>
